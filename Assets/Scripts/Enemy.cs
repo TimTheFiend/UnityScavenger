@@ -4,13 +4,13 @@ using System.Collections;
 public class Enemy : MovingObject
 {
     public int playerDamage;
-
-    private Animator animator;
-    private Transform target;
-    private bool skipMove;
-
     public AudioClip enemyAttack1;
     public AudioClip enemyAttack2;
+
+    private Animator animator;
+    private Transform target;       // Transform to attempt to move towards each turn
+    private bool skipMove;          // Boolean to determine whether or not enemy should skip a turn.
+
 
     protected override void Start() {
         GameManager.instance.AddEnemyToList(this);  // Adding itself to GameManager's list.
@@ -48,9 +48,9 @@ public class Enemy : MovingObject
 
     protected override void OnCantMove<T>(T component) {
         Player hitPlayer = component as Player;
+        hitPlayer.LoseFood(playerDamage);
         animator.SetTrigger("enemyAttack");
         SoundManager.instance.RandomizeSfx(enemyAttack1, enemyAttack2);
-        hitPlayer.LoseFood(playerDamage);
     }
 
 }
